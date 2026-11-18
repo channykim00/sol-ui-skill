@@ -9,6 +9,26 @@ Claude에게 "솔 UI로 로그인 화면 만들어줘"라고 하면 이 규칙�
 - **라이트 / 다크 모드**: 시맨틱 토큰만 바꿔서 자동 전환
 - **한국어 UX 라이팅 규칙**: 해요체, 다음 동작이 보이는 버튼 문구, 다크패턴 금지
 
+## 스크린샷
+
+> 아래 화면은 모두 `examples/`의 데모를 그대로 캡처한 거예요.
+
+### 모바일
+
+![모바일: App · Console · Site 모드](docs/screenshots/mobile.png)
+
+### 웹 — Console 모드 (대시보드)
+
+![웹: Console 모드 대시보드](docs/screenshots/console.png)
+
+### 웹 — Site 모드 (랜딩 페이지)
+
+![웹: Site 모드 랜딩 페이지](docs/screenshots/site.png)
+
+### 다크 모드
+
+![다크 모드: Console 대시보드](docs/screenshots/console-dark.png)
+
 ## 설치
 
 ```bash
@@ -47,6 +67,7 @@ sol-ui/                      ← 스킬 폴더 (~/.claude/skills/ 에 넣는 부
     ├── components.md        # React + TS 컴포넌트 (Button, ListRow, Dialog, Toast …)
     ├── layout.md            # App / Site / Console 모드, 브레이크포인트, 데스크톱 규칙
     └── writing.md           # 한국어 UX 라이팅 규칙
+docs/screenshots/            ← README 스크린샷
 examples/                    ← 브라우저로 바로 열어보는 데모
 ├── index.html               # 토큰·컴포넌트 미리보기 + 모바일 데모
 ├── app.html                 # App 모드: 물 기록 앱
