@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>물 한 잔 관리</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../sol-ui/assets/tokens.css">
+<link rel="stylesheet" href="../sol-ui/assets/components.css">
+<style>
+  .logo { width: 28px; height: 28px; border-radius: 8px; background: var(--color-primary); display: grid; place-items: center; }
+  .chart { display: flex; align-items: flex-end; gap: 10px; height: 220px; padding: 8px 0 0; }
+  .chart .c { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
+  .chart .b { width: 100%; max-width: 36px; border-radius: 8px 8px 4px 4px; background: var(--color-fill-pressed); position: relative; }
+  .chart .b.hit { background: var(--color-accent); }
+  .chart .goal { position: absolute; }
+  .chart-wrap { position: relative; }
+  .goal-line { position: absolute; left: 0; right: 0; border-top: 1.5px dashed var(--n-400); pointer-events: none; }
+  .goal-line span { position: absolute; right: 0; top: -20px; font-size: 12px; color: var(--text-weak); background: var(--color-surface); padding-left: 6px; }
+  .user { display: flex; align-items: center; gap: 10px; padding: 8px 10px; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary-weak); color: var(--color-primary-text); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+  .stack { display: grid; gap: var(--grid-gap); }
+  .mobile-list { display: block; }
+  .desktop-table { display: none; }
+  @media (min-width: 768px) { .mobile-list { display: none; } .desktop-table { display: block; } }
+</style>
+</head>
+<body>
+<div class="sol-console">
+  <aside class="sol-sidebar" id="sidebar" data-open="false" aria-label="주요 메뉴">
+    <div class="sol-sidebar__brand">
+      <span class="logo"><svg width="13" height="15" viewBox="0 0 12 14"><path d="M6 0S0 6.5 0 9.5a6 6 0 0 0 12 0C12 6.5 6 0 6 0Z" fill="#fff"/></svg></span>
+      물 한 잔
+    </div>
+    <nav class="sol-sidebar__nav">
+      <a class="sol-navitem" href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>한눈에 보기</span></a>
+      <a class="sol-navitem" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>기록</span></a>
+      <a class="sol-navitem" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg><span>목표</span></a>
+      <a class="sol-navitem" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg><span>리포트</span><span class="sol-badge sol-badge--primary">NEW</span></a>
+      <div class="sol-sidebar__group">설정</div>
+      <a class="sol-navitem" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span>알림</span></a>
+      <a class="sol-navitem" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>계정</span></a>
+    </nav>
+    <div class="sol-sidebar__foot"><div class="user"><span class="avatar">김</span><div><div style="font-size:14px;font-weight:600;color:var(--text-default)">김물잔</div><div class="t-caption">무료 플랜</div></div></div></div>
+  </aside>
+  <div class="sol-scrim" id="scrim" hidden></div>
+
+  <div class="sol-console__main">
+    <header class="sol-console__bar">
+      <button class="sol-iconbtn sol-console__menu" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <div class="sol-console__title">한눈에 보기</div>
+      <button class="sol-iconbtn" aria-label="검색"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+    </header>
+
+    <main class="sol-console__content">
+      <div class="sol-pagehead">
+        <div>
+          <h1 class="t-title1" style="margin:0">이번 주 물 마신 기록</h1>
+          <p class="t-body2" style="margin:6px 0 0">11월 12일부터 18일까지 7일 동안의 기록이에요</p>
+        </div>
+        <div class="sol-pagehead__actions">
+          <button class="sol-btn sol-btn--secondary sol-btn--md">내보내기</button>
+          <button class="sol-btn sol-btn--primary sol-btn--md" id="addBtn">기록 추가하기</button>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="sol-grid sol-grid--stats">
+          <div class="sol-panel sol-stat"><div class="sol-stat__label">하루 평균</div><div class="sol-stat__value">1,914ml</div><div class="sol-stat__delta sol-stat__delta--up">지난주보다 +120ml</div></div>
+          <div class="sol-panel sol-stat"><div class="sol-stat__label">목표 달성</div><div class="sol-stat__value">3일 / 7일</div><div class="sol-stat__delta">43%</div></div>
+          <div class="sol-panel sol-stat"><div class="sol-stat__label">최고로 마신 날</div><div class="sol-stat__value">2,250ml</div><div class="sol-stat__delta">11월 15일 금요일</div></div>
+          <div class="sol-panel sol-stat"><div class="sol-stat__label">연속 기록</div><div class="sol-stat__value">12일</div><div class="sol-stat__delta sol-stat__delta--up">최고 기록이에요</div></div>
+        </div>
+
+        <div class="sol-split">
+          <section class="sol-panel">
+            <div class="sol-panel__head">
+              <h2 class="t-heading" style="margin:0">요일별 마신 양</h2>
+              <div class="sol-segmented" style="margin:0;width:180px" id="range"><button aria-pressed="true">이번 주</button><button aria-pressed="false">지난주</button></div>
+            </div>
+            <div class="sol-panel__body">
+              <div class="chart-wrap">
+                <div class="goal-line" id="goalLine"><span>목표 2,000ml</span></div>
+                <div class="chart" id="chart"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="sol-panel">
+            <div class="sol-panel__head"><h2 class="t-heading" style="margin:0">오늘</h2><span class="sol-badge sol-badge--warning">950ml 남음</span></div>
+            <div class="sol-panel__body" style="padding-bottom:var(--sp-3)">
+              <div class="sol-progress" role="progressbar" aria-label="오늘 달성률" aria-valuenow="53"><i style="width:53%"></i></div>
+              <div style="display:flex;justify-content:space-between;margin-top:8px" class="t-caption t-num"><span>1,050ml</span><span>53%</span></div>
+            </div>
+            <button class="sol-row sol-row--sm"><span class="sol-row__leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h14l-1.7 16.2A2 2 0 0 1 15.3 21H8.7a2 2 0 0 1-2-1.8z"/><path d="M5.6 9h12.8"/></svg></span><span class="sol-row__body"><div class="sol-row__title">생수 한 병</div><div class="sol-row__desc">13:05</div></span><span class="sol-row__trailing">500ml</span></button>
+            <button class="sol-row sol-row--sm"><span class="sol-row__leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h14l-1.7 16.2A2 2 0 0 1 15.3 21H8.7a2 2 0 0 1-2-1.8z"/><path d="M5.6 9h12.8"/></svg></span><span class="sol-row__body"><div class="sol-row__title">종이컵</div><div class="sol-row__desc">10:40</div></span><span class="sol-row__trailing">200ml</span></button>
+            <button class="sol-row sol-row--sm"><span class="sol-row__leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h14l-1.7 16.2A2 2 0 0 1 15.3 21H8.7a2 2 0 0 1-2-1.8z"/><path d="M5.6 9h12.8"/></svg></span><span class="sol-row__body"><div class="sol-row__title">머그컵</div><div class="sol-row__desc">08:12</div></span><span class="sol-row__trailing">350ml</span></button>
+          </section>
+        </div>
+
+        <section class="sol-panel">
+          <div class="sol-panel__head"><h2 class="t-heading" style="margin:0">날짜별 기록</h2><button class="sol-btn sol-btn--text" style="font-size:15px">전체 보기</button></div>
+          <div class="desktop-table">
+            <div class="sol-table-wrap">
+              <table class="sol-table">
+                <thead><tr><th scope="col">날짜</th><th scope="col" class="num">마신 양</th><th scope="col" class="num">횟수</th><th scope="col" class="num">목표</th><th scope="col">상태</th></tr></thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mobile-list" id="mlist"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  const days = [
+    { d: '11월 18일 (월)', ml: 1050, n: 3 }, { d: '11월 17일 (일)', ml: 2000, n: 6 },
+    { d: '11월 16일 (토)', ml: 1900, n: 5 }, { d: '11월 15일 (금)', ml: 2250, n: 7 },
+    { d: '11월 14일 (목)', ml: 1400, n: 4 }, { d: '11월 13일 (수)', ml: 2100, n: 6 },
+    { d: '11월 12일 (화)', ml: 1800, n: 5 },
+  ];
+  const lastWeek = [1500, 1700, 2000, 1600, 1850, 1900, 1750];
+  const goal = 2000, fmt = n => n.toLocaleString('ko-KR');
+  const badge = (ml, today) => today ? '<span class="sol-badge sol-badge--neutral">진행 중</span>'
+    : ml >= goal ? '<span class="sol-badge sol-badge--primary">달성</span>' : '<span class="sol-badge sol-badge--warning">미달성</span>';
+
+  document.getElementById('tbody').innerHTML = days.map((r, i) =>
+    `<tr><td>${r.d}</td><td class="num">${fmt(r.ml)}ml</td><td class="num">${r.n}번</td><td class="num">${fmt(goal)}ml</td><td>${badge(r.ml, i === 0)}</td></tr>`).join('');
+  document.getElementById('mlist').innerHTML = days.map((r, i) =>
+    `<div class="sol-row sol-row--sm"><span class="sol-row__body"><div class="sol-row__title">${r.d}</div><div class="sol-row__desc">${r.n}번 마셨어요</div></span><span class="sol-row__trailing">${fmt(r.ml)}ml ${badge(r.ml, i === 0)}</span></div>`).join('');
+
+  const H = 180;
+  function chart(vals) {
+    const max = Math.max(goal, ...vals) * 1.08;
+    document.getElementById('chart').innerHTML = vals.map((v, i) =>
+      `<div class="c"><div class="b ${v >= goal ? 'hit' : ''}" style="height:${v / max * H}px" title="${fmt(v)}ml"></div><span class="t-caption">${'화수목금토일월'[i]}</span></div>`).join('');
+    document.getElementById('goalLine').style.bottom = (goal / max * H + 26) + 'px';
+  }
+  chart(days.map(d => d.ml).reverse());
+  document.querySelectorAll('#range button').forEach((b, i) => b.onclick = () => {
+    document.querySelectorAll('#range button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    chart(i ? lastWeek : days.map(d => d.ml).reverse());
+  });
+
+  const sb = document.getElementById('sidebar'), scrim = document.getElementById('scrim'), mb = document.getElementById('menuBtn');
+  const setOpen = o => { sb.dataset.open = o; scrim.hidden = !o; mb.setAttribute('aria-expanded', o); };
+  mb.onclick = () => setOpen(true); scrim.onclick = () => setOpen(false);
+  document.addEventListener('keydown', e => e.key === 'Escape' && setOpen(false));
+  window.addEventListener('message', e => { if (e.data?.theme) document.documentElement.dataset.theme = e.data.theme; });
+</script>
+</body>
+</html>

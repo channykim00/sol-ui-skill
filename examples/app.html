@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>물 한 잔</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../sol-ui/assets/tokens.css">
+<link rel="stylesheet" href="../sol-ui/assets/components.css">
+<style>
+  em { font-style: normal; }
+  .screen[hidden] { display: none !important; }
+  .screen { display: flex; flex-direction: column; min-height: 100dvh; animation: slide var(--dur-slow) var(--ease-out); }
+  @keyframes slide { from { opacity: 0; transform: translateX(12px); } }
+  .progress-wrap { padding: 0 var(--gutter) var(--sp-2); }
+  .legend { display: flex; justify-content: space-between; margin-top: var(--sp-2); }
+  .week { display: flex; align-items: flex-end; justify-content: space-between; height: 170px; padding: var(--sp-4) 28px 0; }
+  .week .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
+  .week .bar { width: 22px; border-radius: 6px 6px 3px 3px; background: var(--color-fill-pressed); transition: height var(--dur-slow) var(--ease-out); }
+  .week .bar.hit { background: var(--color-accent); }
+  .week .bar.today { background: var(--color-primary-weak); outline: 2px solid var(--color-accent); outline-offset: -2px; }
+  .week .is-today .t-caption { color: var(--text-strong); font-weight: 700; }
+  .stepper { display: flex; align-items: center; justify-content: center; gap: 28px; padding: 28px var(--gutter) var(--sp-2); }
+  .stepper .sol-iconbtn { width: 52px; height: 52px; border-radius: 50%; background: var(--color-fill); }
+  .stepper .sol-iconbtn:disabled { opacity: .35; cursor: default; }
+  .stepper output { min-width: 150px; text-align: center; }
+  .center { text-align: center; }
+  .sol-appbar__title { font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="sol-app">
+
+  <!-- ============ Home ============ -->
+  <section class="screen" data-screen="home">
+    <header class="sol-appbar">
+      <h1 class="sol-appbar__title" style="padding-left:16px">물 한 잔</h1>
+      <button class="sol-iconbtn" aria-label="알림 설정" data-toast="알림 설정은 준비 중이에요">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </button>
+    </header>
+    <main class="sol-page">
+      <div class="sol-pageheader">
+        <div class="sol-pageheader__eyebrow" id="dateLabel"></div>
+        <h2 class="t-title1" id="homeTitle" style="margin:0"></h2>
+      </div>
+      <div class="progress-wrap">
+        <div class="sol-progress" role="progressbar" aria-label="오늘 목표 달성률" id="prog"><i id="bar" style="width:0"></i></div>
+        <div class="legend t-caption t-num"><span id="pct"></span><span id="goalLegend"></span></div>
+      </div>
+
+      <div class="sol-tabs" role="tablist" style="margin-top:var(--sp-3)">
+        <button class="sol-tab" role="tab" aria-selected="true" data-tab="today">오늘 기록</button>
+        <button class="sol-tab" role="tab" aria-selected="false" data-tab="week">이번 주</button>
+      </div>
+
+      <div data-panel="today">
+        <div class="sol-sectionheader"><h3 class="t-heading" style="margin:0">마신 기록</h3><span class="sol-sectionheader__aux" id="count"></span></div>
+        <div id="logs"></div>
+        <div class="sol-section-gap"></div>
+        <div class="sol-sectionheader"><h3 class="t-heading" style="margin:0">설정</h3></div>
+        <button class="sol-row" data-go="goal">
+          <span class="sol-row__leading sol-row__leading--neutral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
+          <span class="sol-row__body"><div class="sol-row__title">하루 목표 바꾸기</div><div class="sol-row__desc" id="goalDesc"></div></span>
+          <span class="sol-row__trailing"><svg class="sol-row__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></span>
+        </button>
+        <button class="sol-row" data-toast="데이터 내보내기는 준비 중이에요">
+          <span class="sol-row__leading sol-row__leading--neutral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg></span>
+          <span class="sol-row__body"><div class="sol-row__title">기록 내보내기</div></span>
+          <span class="sol-row__trailing"><span class="sol-badge sol-badge--neutral">준비 중</span></span>
+        </button>
+      </div>
+
+      <div data-panel="week" hidden>
+        <div class="sol-sectionheader"><h3 class="t-heading" style="margin:0">이번 주 기록</h3><span class="sol-sectionheader__aux" id="weekAux"></span></div>
+        <div class="week" id="week"></div>
+        <p class="t-caption center" style="margin-top:var(--sp-4)">초록 막대는 목표를 채운 날이에요</p>
+      </div>
+    </main>
+    <div class="sol-bottomcta"><button class="sol-btn sol-btn--primary sol-btn--block" data-go="add">물 마신 거 기록하기</button></div>
+  </section>
+
+  <!-- ============ Add ============ -->
+  <section class="screen" data-screen="add" hidden>
+    <header class="sol-appbar">
+      <button class="sol-iconbtn" aria-label="뒤로 가기" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+    </header>
+    <main class="sol-page">
+      <div class="sol-pageheader">
+        <h2 class="t-title1" style="margin:0">얼마나 마셨어요?</h2>
+        <p class="sol-pageheader__desc" style="margin:8px 0 0">자주 쓰는 컵 크기를 골라주세요</p>
+      </div>
+      <div role="radiogroup" aria-label="컵 크기" id="sizes"></div>
+      <div class="sol-section-gap"></div>
+      <div style="padding-top:var(--sp-6)">
+        <div class="sol-field">
+          <label class="sol-field__label" for="custom">직접 입력하기</label>
+          <input class="sol-input t-num" id="custom" inputmode="numeric" placeholder="예: 300" autocomplete="off">
+          <div class="sol-field__help" id="customHelp">50ml에서 2,000ml까지 입력할 수 있어요</div>
+        </div>
+      </div>
+    </main>
+    <div class="sol-bottomcta">
+      <button class="sol-btn sol-btn--secondary" data-back>닫기</button>
+      <button class="sol-btn sol-btn--primary" id="addBtn" disabled>컵 크기를 골라주세요</button>
+    </div>
+  </section>
+
+  <!-- ============ Goal ============ -->
+  <section class="screen" data-screen="goal" hidden>
+    <header class="sol-appbar">
+      <button class="sol-iconbtn" aria-label="뒤로 가기" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+    </header>
+    <main class="sol-page">
+      <div class="sol-pageheader">
+        <h2 class="t-title1" style="margin:0">하루에 얼마나<br>마시고 싶어요?</h2>
+        <p class="sol-pageheader__desc" style="margin:8px 0 0">성인은 하루 1.5~2L 정도 마시면 좋아요</p>
+      </div>
+      <div class="stepper">
+        <button class="sol-iconbtn" id="minus" aria-label="250ml 줄이기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+        <output class="t-display t-num" id="goalOut"></output>
+        <button class="sol-iconbtn" id="plus" aria-label="250ml 늘리기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M12 5v14"/></svg></button>
+      </div>
+      <p class="t-body2 center" id="goalHint" style="margin:0"></p>
+    </main>
+    <div class="sol-bottomcta"><button class="sol-btn sol-btn--primary sol-btn--block" id="saveGoal">이 목표로 저장하기</button></div>
+  </section>
+</div>
+
+<div id="overlay"></div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const fmt = n => n.toLocaleString('ko-KR');
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  const cup = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h14l-1.7 16.2A2 2 0 0 1 15.3 21H8.7a2 2 0 0 1-2-1.8z"/><path d="M5.6 9h12.8"/></svg>`;
+
+  const SIZES = [
+    { ml: 200, name: '종이컵' }, { ml: 350, name: '머그컵' },
+    { ml: 500, name: '생수 한 병' }, { ml: 750, name: '큰 텀블러' },
+  ];
+  const S = {
+    goal: 2000, nextId: 4, selected: null,
+    logs: [{ id: 1, time: '08:12', ml: 350 }, { id: 2, time: '10:40', ml: 200 }, { id: 3, time: '13:05', ml: 500 }],
+    week: [1800, 2100, 1400, 2250, 1900, 2000],
+  };
+  const total = () => S.logs.reduce((a, l) => a + l.ml, 0);
+
+  // ---- navigation ----
+  const stack = ['home'];
+  const show = n => { $$('.screen').forEach(s => s.hidden = s.dataset.screen !== n); window.scrollTo(0, 0); };
+  const go = n => { stack.push(n); if (n === 'add') resetAdd(); if (n === 'goal') { draft = S.goal; renderGoal(); } show(n); };
+  const back = () => { if (stack.length > 1) stack.pop(); show(stack.at(-1)); };
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-go],[data-back],[data-toast]');
+    if (!t) return;
+    if (t.dataset.go) go(t.dataset.go);
+    else if ('back' in t.dataset) back();
+    else toast(t.dataset.toast);
+  });
+
+  // ---- home ----
+  function renderHome() {
+    const t = total(), left = S.goal - t, p = Math.min(100, t / S.goal * 100);
+    $('#homeTitle').innerHTML = left > 0
+      ? `오늘 <em class="t-accent">${fmt(t)}ml</em> 마셨어요<br>${fmt(left)}ml 더 마시면 돼요`
+      : `오늘 목표를 채웠어요<br><em class="t-accent">${fmt(t)}ml</em> 마셨어요`;
+    $('#bar').style.width = p + '%';
+    $('#prog').setAttribute('aria-valuenow', Math.round(p));
+    $('#pct').textContent = Math.round(p) + '%';
+    $('#goalLegend').textContent = `목표 ${fmt(S.goal)}ml`;
+    $('#goalDesc').textContent = `지금은 ${fmt(S.goal)}ml예요`;
+    $('#count').textContent = `${S.logs.length}번`;
+    $('#logs').innerHTML = S.logs.length ? [...S.logs].reverse().map(l => {
+      const name = SIZES.find(s => s.ml === l.ml)?.name ?? '직접 입력';
+      return `<button class="sol-row" data-del="${l.id}">
+        <span class="sol-row__leading">${cup}</span>
+        <span class="sol-row__body"><div class="sol-row__title">${esc(name)}</div><div class="sol-row__desc">${l.time}</div></span>
+        <span class="sol-row__trailing">${fmt(l.ml)}ml</span></button>`;
+    }).join('') : `<div class="sol-empty">아직 기록이 없어요<br>아래 버튼으로 첫 잔을 기록할 수 있어요</div>`;
+    $$('[data-del]').forEach(r => r.onclick = async () => {
+      const log = S.logs.find(l => l.id === +r.dataset.del);
+      const ok = await confirmDialog({ title: `${log.time}에 마신 ${fmt(log.ml)}ml 기록을 지울까요?`, desc: '지운 기록은 되돌릴 수 없어요', ok: '지우기', danger: true });
+      if (!ok) return;
+      S.logs = S.logs.filter(l => l !== log); renderHome(); toast('기록을 지웠어요');
+    });
+    const vals = [...S.week, t], max = Math.max(S.goal, ...vals);
+    $('#weekAux').textContent = `${vals.filter(v => v >= S.goal).length}일 목표 달성`;
+    $('#week').innerHTML = vals.map((v, i) => {
+      const today = i === 6, cls = v >= S.goal ? 'hit' : today ? 'today' : '';
+      return `<div class="col ${today ? 'is-today' : ''}"><div class="bar ${cls}" style="height:${Math.max(6, v / max * 120)}px" title="${fmt(v)}ml"></div><span class="t-caption">${today ? '오늘' : '월화수목금토'[i]}</span></div>`;
+    }).join('');
+  }
+  $$('.sol-tab').forEach(t => t.onclick = () => {
+    $$('.sol-tab').forEach(x => x.setAttribute('aria-selected', x === t));
+    $$('[data-panel]').forEach(p => p.hidden = p.dataset.panel !== t.dataset.tab);
+  });
+
+  // ---- add ----
+  function resetAdd() {
+    S.selected = null; $('#custom').value = ''; setCustomError(null);
+    $('#sizes').innerHTML = SIZES.map(s => `
+      <button class="sol-row" role="radio" aria-checked="false" data-ml="${s.ml}">
+        <span class="sol-row__leading">${cup}</span>
+        <span class="sol-row__body"><div class="sol-row__title">${s.name}</div><div class="sol-row__desc">${s.ml}ml</div></span>
+        <span class="sol-row__trailing"><span class="sol-radio"></span></span></button>`).join('');
+    $$('[data-ml]').forEach(r => r.onclick = () => { $('#custom').value = ''; setCustomError(null); select(+r.dataset.ml); });
+    syncAdd();
+  }
+  function select(ml) {
+    S.selected = ml;
+    $$('[data-ml]').forEach(x => x.setAttribute('aria-checked', +x.dataset.ml === ml));
+    syncAdd();
+  }
+  function setCustomError(msg) {
+    const h = $('#customHelp'), i = $('#custom');
+    h.textContent = msg ?? '50ml에서 2,000ml까지 입력할 수 있어요';
+    h.classList.toggle('sol-field__help--error', !!msg);
+    msg ? i.setAttribute('aria-invalid', 'true') : i.removeAttribute('aria-invalid');
+  }
+  $('#custom').oninput = e => {
+    const v = e.target.value.replace(/\D/g, ''); e.target.value = v;
+    if (!v) { setCustomError(null); return select(null); }
+    const n = +v;
+    if (n < 50 || n > 2000) { setCustomError('50ml에서 2,000ml 사이로 입력해 주세요'); return select(null); }
+    setCustomError(null); select(n);
+  };
+  function syncAdd() {
+    const b = $('#addBtn');
+    b.disabled = !S.selected;
+    b.textContent = S.selected ? `${fmt(S.selected)}ml 기록하기` : '컵 크기를 골라주세요';
+  }
+  $('#addBtn').onclick = () => {
+    const b = $('#addBtn');
+    if (!S.selected || b.getAttribute('aria-busy')) return;
+    b.setAttribute('aria-busy', 'true');
+    setTimeout(() => {
+      const d = new Date(), ml = S.selected, before = total();
+      S.logs.push({ id: S.nextId++, time: `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`, ml });
+      b.removeAttribute('aria-busy'); renderHome(); back();
+      toast(before < S.goal && total() >= S.goal ? '오늘 목표를 채웠어요' : `${fmt(ml)}ml 기록했어요`);
+    }, 450);
+  };
+
+  // ---- goal ----
+  let draft = S.goal;
+  function renderGoal() {
+    $('#goalOut').textContent = `${fmt(draft)}ml`;
+    $('#minus').disabled = draft <= 1000; $('#plus').disabled = draft >= 4000;
+    $('#goalHint').textContent = `250ml 컵으로 ${Math.round(draft / 250)}잔 정도예요`;
+  }
+  $('#minus').onclick = () => { draft = Math.max(1000, draft - 250); renderGoal(); };
+  $('#plus').onclick = () => { draft = Math.min(4000, draft + 250); renderGoal(); };
+  $('#saveGoal').onclick = () => { S.goal = draft; renderHome(); back(); toast(`목표를 ${fmt(S.goal)}ml로 바꿨어요`); };
+
+  // ---- dialog / toast (same markup as the React FeedbackProvider) ----
+  function confirmDialog({ title, desc, ok, danger }) {
+    return new Promise(resolve => {
+      const o = $('#overlay');
+      o.innerHTML = `<div class="sol-dim"><div class="sol-dialog" role="alertdialog" aria-modal="true" aria-labelledby="dt">
+        <h2 id="dt" class="t-title3 sol-dialog__title">${esc(title)}</h2><p class="sol-dialog__desc">${esc(desc)}</p>
+        <div class="sol-dialog__actions"><button class="sol-btn sol-btn--secondary" data-r="0">닫기</button>
+        <button class="sol-btn sol-btn--${danger ? 'danger' : 'primary'}" data-r="1">${esc(ok)}</button></div></div></div>`;
+      const done = v => { o.innerHTML = ''; document.removeEventListener('keydown', onKey); resolve(v); };
+      const onKey = e => e.key === 'Escape' && done(false);
+      document.addEventListener('keydown', onKey);
+      $('.sol-dim', o).onclick = e => { if (e.target.classList.contains('sol-dim')) done(false); };
+      $$('[data-r]', o).forEach(b => b.onclick = () => done(b.dataset.r === '1'));
+      $('[data-r="0"]', o).focus();
+    });
+  }
+  let tt;
+  function toast(msg) {
+    $('.sol-toast')?.remove(); clearTimeout(tt);
+    const el = document.createElement('div');
+    el.className = 'sol-toast'; el.setAttribute('role', 'status');
+    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="var(--g-400)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg><span></span>`;
+    el.querySelector('span').textContent = msg;
+    document.body.appendChild(el);
+    tt = setTimeout(() => el.remove(), 2200);
+  }
+
+  // allow the showcase page to trigger screens
+  window.addEventListener('message', e => {
+    const m = e.data || {};
+    if (m.theme) document.documentElement.dataset.theme = m.theme;
+    if (m.jump === 'home') { stack.length = 1; show('home'); }
+    if (m.jump === 'add' || m.jump === 'goal') { stack.length = 1; go(m.jump); }
+    if (m.jump === 'dialog') { stack.length = 1; show('home'); $('.sol-tab[data-tab=today]').click(); $('[data-del]') ? $('[data-del]').click() : toast('지울 기록이 없어요'); }
+    if (m.jump === 'toast') toast('350ml 기록했어요');
+  });
+
+  const d = new Date();
+  $('#dateLabel').textContent = `${d.getMonth() + 1}월 ${d.getDate()}일`;
+  renderHome();
+})();
+</script>
+</body>
+</html>

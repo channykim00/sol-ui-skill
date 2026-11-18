@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>물 한 잔 소개</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../sol-ui/assets/tokens.css">
+<link rel="stylesheet" href="../sol-ui/assets/components.css">
+<style>
+  em { font-style: normal; }
+  .logo { width: 28px; height: 28px; border-radius: 8px; background: var(--color-primary); display: grid; place-items: center; }
+  .hero-grid { display: grid; gap: 48px; align-items: center; }
+  @media (min-width: 1024px) { .hero-grid { grid-template-columns: 1.1fr 1fr; } }
+  .hero-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+  .mock { background: var(--color-bg-sunken); border-radius: 28px; padding: 28px; }
+  .mock .sol-panel { box-shadow: var(--shadow-md); }
+  .feature { padding: 28px; }
+  .feature .ic { width: 44px; height: 44px; border-radius: 12px; background: var(--color-primary-weak); color: var(--color-accent); display: grid; place-items: center; margin-bottom: 20px; }
+  .feature .ic svg { width: 24px; height: 24px; }
+  .eyebrow { font-size: 15px; font-weight: 600; color: var(--color-primary); margin-bottom: 10px; }
+  .center { text-align: center; }
+  .numbers { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); margin-top: 40px; }
+  @media (min-width: 1024px) { .numbers { grid-template-columns: repeat(4, 1fr); } }
+  .numbers b { display: block; font-size: 32px; font-weight: 700; letter-spacing: -.02em; color: var(--text-strong); font-variant-numeric: tabular-nums; }
+  .numbers span { font-size: 15px; color: var(--text-sub); }
+  .final { text-align: center; }
+  .final .sol-btn { margin-top: 28px; }
+</style>
+</head>
+<body>
+<div class="sol-site">
+  <header class="sol-topnav">
+    <div class="sol-container sol-topnav__inner">
+      <a class="sol-topnav__brand" href="#"><span class="logo"><svg width="13" height="15" viewBox="0 0 12 14"><path d="M6 0S0 6.5 0 9.5a6 6 0 0 0 12 0C12 6.5 6 0 6 0Z" fill="#fff"/></svg></span>물 한 잔</a>
+      <nav class="sol-topnav__links" aria-label="주요 메뉴">
+        <a href="#" aria-current="page">소개</a><a href="#features">기능</a><a href="#faq">자주 묻는 질문</a>
+      </nav>
+      <div class="sol-topnav__actions">
+        <a class="sol-btn sol-btn--primary sol-btn--sm" href="app.html" style="text-decoration:none">시작하기</a>
+        <button class="sol-iconbtn sol-topnav__menu" aria-label="메뉴 열기" id="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <section class="sol-hero">
+    <div class="sol-container hero-grid">
+      <div>
+        <div class="eyebrow">하루 물 마시기 습관</div>
+        <h1 class="t-display" style="margin:0">마신 만큼 기록하고<br><em class="t-accent">2L</em>를 채워봐요</h1>
+        <p class="t-body2 sol-prose" style="margin:16px 0 0;font-size:17px">컵 크기만 고르면 기록이 끝나요. 오늘 얼마나 남았는지, 이번 주에 며칠 채웠는지 한눈에 볼 수 있어요.</p>
+        <div class="hero-btns">
+          <a class="sol-btn sol-btn--primary" href="app.html" style="text-decoration:none">무료로 시작하기</a>
+          <a class="sol-btn sol-btn--secondary" href="#features" style="text-decoration:none">기능 살펴보기</a>
+        </div>
+      </div>
+      <div class="mock" aria-hidden="true">
+        <div class="sol-panel">
+          <div class="sol-panel__head"><span class="t-heading">오늘</span><span class="sol-badge sol-badge--primary">53%</span></div>
+          <div class="sol-panel__body" style="padding-bottom:12px">
+            <div class="t-title2">1,050ml 마셨어요</div>
+            <div class="sol-progress" style="margin-top:14px"><i style="width:53%"></i></div>
+          </div>
+          <div class="sol-row sol-row--sm"><span class="sol-row__leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h14l-1.7 16.2A2 2 0 0 1 15.3 21H8.7a2 2 0 0 1-2-1.8z"/><path d="M5.6 9h12.8"/></svg></span><span class="sol-row__body"><div class="sol-row__title">생수 한 병</div><div class="sol-row__desc">13:05</div></span><span class="sol-row__trailing">500ml</span></div>
+          <div class="sol-row sol-row--sm"><span class="sol-row__leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h14l-1.7 16.2A2 2 0 0 1 15.3 21H8.7a2 2 0 0 1-2-1.8z"/><path d="M5.6 9h12.8"/></svg></span><span class="sol-row__body"><div class="sol-row__title">종이컵</div><div class="sol-row__desc">10:40</div></span><span class="sol-row__trailing">200ml</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sol-section sol-section--sunken" id="features">
+    <div class="sol-container">
+      <div class="center"><div class="eyebrow">기능</div><h2 class="t-title1" style="margin:0">기록은 가볍게, 확인은 한눈에</h2></div>
+      <div class="sol-grid sol-grid--3" style="margin-top:40px">
+        <div class="sol-panel feature"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div><h3 class="t-heading" style="margin:0">한 번에 기록하기</h3><p class="t-body2" style="margin:8px 0 0">자주 쓰는 컵을 고르면 끝이에요. 직접 입력도 할 수 있어요.</p></div>
+        <div class="sol-panel feature"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg></div><h3 class="t-heading" style="margin:0">주간 리포트 보기</h3><p class="t-body2" style="margin:8px 0 0">요일별로 얼마나 마셨는지, 며칠 목표를 채웠는지 알려줘요.</p></div>
+        <div class="sol-panel feature"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div><h3 class="t-heading" style="margin:0">알맞은 때 알림 받기</h3><p class="t-body2" style="margin:8px 0 0">원하는 시간에만 알려줘요. 언제든 끌 수 있어요.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sol-section">
+    <div class="sol-container center">
+      <div class="eyebrow">숫자로 보는 물 한 잔</div>
+      <h2 class="t-title1" style="margin:0">매일 조금씩 쌓이고 있어요</h2>
+      <div class="numbers"><div><b>12,400명</b><span>이번 달 기록한 사람</span></div><div><b>38만 잔</b><span>지금까지 기록한 잔</span></div><div><b>1,870ml</b><span>하루 평균 마신 양</span></div><div><b>64%</b><span>목표를 채운 날의 비율</span></div></div>
+    </div>
+  </section>
+
+  <section class="sol-section sol-section--sunken" id="faq">
+    <div class="sol-container sol-container--narrow">
+      <h2 class="t-title1 center" style="margin:0 0 32px">자주 묻는 질문</h2>
+      <div class="sol-panel">
+        <button class="sol-row"><span class="sol-row__body"><div class="sol-row__title">무료로 쓸 수 있어요?</div><div class="sol-row__desc">기록과 주간 리포트는 모두 무료예요.</div></span></button>
+        <div class="sol-divider"></div>
+        <button class="sol-row"><span class="sol-row__body"><div class="sol-row__title">하루 목표는 어떻게 정해요?</div><div class="sol-row__desc">1L부터 4L까지 250ml 단위로 정할 수 있어요.</div></span></button>
+        <div class="sol-divider"></div>
+        <button class="sol-row"><span class="sol-row__body"><div class="sol-row__title">기록을 지울 수 있어요?</div><div class="sol-row__desc">기록을 누르면 지울 수 있어요. 지우기 전에 한 번 더 물어봐요.</div></span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sol-section final">
+    <div class="sol-container">
+      <h2 class="t-title1" style="margin:0">오늘 첫 잔부터 기록해봐요</h2>
+      <a class="sol-btn sol-btn--primary" href="app.html" style="text-decoration:none">무료로 시작하기</a>
+    </div>
+  </section>
+
+  <footer class="sol-footer"><div class="sol-container">© 2026 물 한 잔 · 이용약관 · 개인정보처리방침</div></footer>
+</div>
+
+<div id="sheet"></div>
+<script>
+  document.getElementById('menu').onclick = () => {
+    const s = document.getElementById('sheet');
+    s.innerHTML = `<div class="sol-sheet-dim"><div class="sol-sheet" role="dialog" aria-modal="true" aria-label="메뉴"><div class="sol-sheet__handle"></div>
+      <a class="sol-row sol-row--sm" href="#"><span class="sol-row__body"><span class="sol-row__title">소개</span></span></a>
+      <a class="sol-row sol-row--sm" href="#features"><span class="sol-row__body"><span class="sol-row__title">기능</span></span></a>
+      <a class="sol-row sol-row--sm" href="#faq"><span class="sol-row__body"><span class="sol-row__title">자주 묻는 질문</span></span></a></div></div>`;
+    const close = () => s.innerHTML = '';
+    s.querySelector('.sol-sheet-dim').onclick = e => { if (e.target.classList.contains('sol-sheet-dim') || e.target.closest('a')) close(); };
+  };
+  window.addEventListener('message', e => { if (e.data?.theme) document.documentElement.dataset.theme = e.data.theme; });
+</script>
+</body>
+</html>
