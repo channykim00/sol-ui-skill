@@ -301,19 +301,13 @@ button.sol-row:active, a.sol-row:active { background: var(--color-bg-sunken); }
 /* Hover only where a real pointer exists */
 @media (hover: hover) and (pointer: fine) {
   button.sol-row:hover, a.sol-row:hover { background: var(--color-bg-sunken); }
-  .sol-panel button.sol-row:hover, .sol-panel a.sol-row:hover { background: var(--n-50); }
+  .sol-panel button.sol-row:hover, .sol-panel a.sol-row:hover { background: var(--color-fill); }
   .sol-btn--primary:hover:not(:disabled) { background: var(--color-primary-pressed); }
   .sol-btn--secondary:hover:not(:disabled), .sol-iconbtn:hover { background: var(--color-fill-pressed); }
   .sol-btn--weak:hover:not(:disabled) { background: var(--color-primary-disabled); }
   .sol-navitem:hover:not([aria-current="page"]) { background: var(--color-fill); color: var(--text-default); }
   .sol-topnav__links a:hover { background: var(--color-fill); color: var(--text-strong); }
-  .sol-table tbody tr:hover { background: var(--n-50); }
+  .sol-table tbody tr:hover { background: var(--color-fill); }
   .sol-tab:hover:not([aria-selected="true"]) { color: var(--text-sub); }
-}
-:root[data-theme="dark"] .sol-panel button.sol-row:hover,
-:root[data-theme="dark"] .sol-table tbody tr:hover { background: var(--color-fill); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .sol-panel button.sol-row:hover,
-  :root:not([data-theme="light"]) .sol-table tbody tr:hover { background: var(--color-fill); }
 }
 .sol-panel .sol-field { padding: 0; }
